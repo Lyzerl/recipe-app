@@ -1,0 +1,14 @@
+# קבצים לא רלוונטיים
+*.gsheet
+*.gsheet~
+
+# קבצי עזרה (אופציונלי - אם תרצה להשאיר אותם, מחק את השורות)
+# FIX_*.md
+# TROUBLESHOOTING.md
+# HOW_TO_UPDATE.md
+# test-url.html
+
+# מערכת הפעלה
+.DS_Store
+Thumbs.db
+
