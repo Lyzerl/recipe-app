@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת מתכונים</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .recipe-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .recipe-info h2 {
+            color: #555;
+            font-size: 1.5em;
+        }
+
+        .quantity-badge {
+            background: #667eea;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .recipe-selection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .recipe-selection-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        
+        .recipe-selection-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .recipe-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .quantity-selection-section h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+
+        .quantity-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .quantity-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .quantity-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .kit-instructions {
+            margin: 30px 0;
+        }
+
+        .kit-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        .kit-meta span {
+            background: #eef2ff;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .kit-instructions h3 {
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .ingredients-list {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .ingredient-item {
+            background: white;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 1.2em;
+        }
+
+        .ingredient-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .ingredient-amount {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .oven-instructions {
+            margin: 30px 0;
+        }
+
+        .oven-info {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .setting-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .setting-label {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .setting-value {
+            color: #667eea;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: #999;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #777;
+            transform: translateY(-2px);
+        }
+
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .refresh-btn:hover {
+            background: #5568d3;
+        }
+
+        .admin-panel {
+            margin-top: 30px;
+        }
+
+        .recipe-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .form-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .ingredient-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .ingredient-row input,
+        .ingredient-row select {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+
+        .remove-ingredient {
+            background: #ff4444;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5em;
+            line-height: 1;
+        }
+
+        .btn-add {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .admin-recipes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .admin-recipe-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-recipe-item h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .admin-recipe-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .btn-edit {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #ff4444;
+            color: white;
+        }
+
+        .screen {
+            display: block;
+            animation: fadeIn 0.2s ease-in;
+        }
+
+        .screen.hidden {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .action-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .action-desc {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .container-type-selection h2,
+        .oven-type-selection h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .container-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .container-btn {
+            background: white;
+            border: 3px solid #ddd;
+            padding: 20px 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .container-btn:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .container-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .container-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .container-title {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .division-content {
+            margin-top: 20px;
+        }
+
+        .division-info {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 1.2em;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .info-value {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        /* רספונסיביות למובייל */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+                border-radius: 15px;
+            }
+            
+            header {
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+            }
+            
+            header h1 {
+                font-size: 1.8em;
+                margin-bottom: 8px;
+            }
+            
+            .recipe-info h2 {
+                font-size: 1.2em;
+            }
+            
+            /* כפתורים במסך ראשי */
+            .recipe-selection-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .recipe-selection-header h2 {
+                font-size: 1.3em;
+                text-align: center;
+            }
+            
+            .recipe-selection-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .recipe-selection-buttons .btn,
+            .recipe-selection-buttons .refresh-btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 1em;
+            }
+            
+            /* רשת מתכונים */
+            .recipes-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .recipe-card {
+                padding: 20px;
+                font-size: 1.1em;
+            }
+            
+            /* כפתורי כמות */
+            .quantity-buttons {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .quantity-btn {
+                padding: 15px 10px;
+                font-size: 1.1em;
+            }
+            
+            /* כפתורי פעולה */
+            .action-buttons {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .action-btn {
+                padding: 25px 20px;
+            }
+            
+            .action-icon {
+                font-size: 2.5em;
+            }
+            
+            .action-title {
+                font-size: 1.3em;
+            }
+            
+            /* כפתורי תבנית */
+            .container-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .container-btn {
+                width: 100%;
+                padding: 15px 20px;
+                min-width: auto;
+            }
+            
+            /* טופס */
+            .form-section {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .form-section h2 {
+                font-size: 1.2em;
+                margin-bottom: 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 12px;
+            }
+            
+            .form-group label {
+                font-size: 1em;
+            }
+            
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                padding: 10px;
+                font-size: 0.95em;
+            }
+            
+            /* שורות רכיבים */
+            .ingredient-row {
+                flex-direction: column;
+                gap: 8px;
+                align-items: stretch;
+            }
+            
+            .ingredient-row input,
+            .ingredient-row select {
+                width: 100%;
+            }
+            
+            .remove-ingredient {
+                width: 100%;
+                height: 40px;
+                border-radius: 8px;
+            }
+            
+            /* כפתורי טופס */
+            .form-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-actions .btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 1em;
+            }
+            
+            /* מידע */
+            .division-info,
+            .oven-info {
+                padding: 15px;
+            }
+            
+            .info-item,
+            .setting-item {
+                padding: 15px;
+                font-size: 1em;
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .info-label,
+            .setting-label {
+                font-size: 0.95em;
+            }
+            
+            .info-value,
+            .setting-value {
+                font-size: 1.1em;
+            }
+            
+            /* רשימת רכיבים */
+            .ingredients-list {
+                padding: 15px;
+            }
+            
+            .ingredient-item {
+                padding: 12px 15px;
+                font-size: 1em;
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+            
+            /* כפתורי ניהול */
+            .admin-recipe-actions {
+                flex-direction: column;
+            }
+            
+            .admin-recipe-actions .btn-edit,
+            .admin-recipe-actions .btn-delete {
+                width: 100%;
+            }
+            
+            /* כפתורי חזרה */
+            .btn-secondary {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            /* מטא קיט */
+            .kit-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .kit-meta span {
+                text-align: center;
+            }
+        }
+        
+        /* טבלטים */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .recipes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .action-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* מסכים קטנים מאוד */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                padding: 10px;
+                border-radius: 10px;
+            }
+            
+            header h1 {
+                font-size: 1.5em;
+            }
+            
+            .quantity-buttons {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .quantity-btn {
+                padding: 12px 8px;
+                font-size: 1em;
+            }
+            
+            .recipe-card {
+                padding: 15px;
+                font-size: 1em;
+            }
+            
+            .action-btn {
+                padding: 20px 15px;
+            }
+            
+            .action-icon {
+                font-size: 2em;
+            }
+            
+            .action-title {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- מסך ראשי - בחירת מתכון -->
+        <div id="main-screen" class="screen active">
+            <header>
+                <h1>מערכת מתכונים</h1>
+            </header>
+            
+            <div class="recipe-selection">
+                <div class="recipe-selection-header">
+                    <h2>בחר מתכון</h2>
+                    <div class="recipe-selection-buttons">
+                        <button id="add-recipe-btn" class="btn btn-primary">➕ הוסף מתכון</button>
+                        <button id="edit-recipes-btn" class="btn btn-secondary">✏️ ערוך מתכונים</button>
+                        <button id="refresh-btn" class="refresh-btn" title="רענון רשימת מתכונים">🔄 רענון</button>
+                    </div>
+                </div>
+                <div id="recipes-list" class="recipes-grid">
+                    <div class="loading">טוען מתכונים...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- מסך בחירת פעולה לאחר בחירת מתכון -->
+        <div id="action-selection-screen" class="screen hidden">
+            <header>
+                <h1 id="selected-recipe-name"></h1>
+                <button id="back-to-main" class="btn btn-secondary">← חזור</button>
+            </header>
+            
+            <div class="action-buttons">
+                <button id="kit-action-btn" class="action-btn">
+                    <div class="action-icon">📦</div>
+                    <div class="action-title">קיטים</div>
+                    <div class="action-desc">חומרי גלם והכנת הקיט</div>
+                </button>
+                <button id="division-action-btn" class="action-btn">
+                    <div class="action-icon">🥘</div>
+                    <div class="action-title">חלוקה לתבניות</div>
+                    <div class="action-desc">גסטרונום / סיפט</div>
+                </button>
+                <button id="oven-action-btn" class="action-btn">
+                    <div class="action-icon">🔥</div>
+                    <div class="action-title">תנור</div>
+                    <div class="action-desc">הוראות אפייה</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- מסך קיטים -->
+        <div id="kit-screen" class="screen hidden">
+            <header>
+                <h1>קיטים - חומרי גלם</h1>
+                <div class="recipe-info">
+                    <h2 id="kit-recipe-name"></h2>
+                </div>
+                <button id="back-from-kit" class="btn btn-secondary">← חזור</button>
+            </header>
+            
+            <div class="quantity-selection-section">
+                <h2>בחר כמות (בכפולות של 10 ק"ג)</h2>
+                <div class="quantity-buttons">
+                    <button class="quantity-btn" data-quantity="10">10 ק"ג</button>
+                    <button class="quantity-btn" data-quantity="20">20 ק"ג</button>
+                    <button class="quantity-btn" data-quantity="30">30 ק"ג</button>
+                    <button class="quantity-btn" data-quantity="40">40 ק"ג</button>
+                    <button class="quantity-btn" data-quantity="50">50 ק"ג</button>
+                    <button class="quantity-btn" data-quantity="60">60 ק"ג</button>
+                    <button class="quantity-btn" data-quantity="70">70 ק"ג</button>
+                    <button class="quantity-btn" data-quantity="80">80 ק"ג</button>
+                    <button class="quantity-btn" data-quantity="90">90 ק"ג</button>
+                    <button class="quantity-btn" data-quantity="100">100 ק"ג</button>
+                </div>
+            </div>
+            
+            <div id="kit-content" class="kit-instructions">
+                <div class="kit-meta">
+                    <span id="base-batch-info">כמות בסיס: 10 ק"ג</span>
+                    <span id="multiplier-info">מכפיל: x1</span>
+                    <span id="selected-quantity-badge" class="quantity-badge" style="display: none;"></span>
+                </div>
+                <h3>רכיבים לקיט:</h3>
+                <div id="kit-ingredients" class="ingredients-list">
+                    <!-- יוטען דינמית -->
+                </div>
+            </div>
+        </div>
+
+        <!-- מסך חלוקה לתבניות -->
+        <div id="division-screen" class="screen hidden">
+            <header>
+                <h1>חלוקה לתבניות</h1>
+                <div class="recipe-info">
+                    <h2 id="division-recipe-name"></h2>
+                </div>
+                <button id="back-from-division" class="btn btn-secondary">← חזור</button>
+            </header>
+            
+            <div class="container-type-selection">
+                <h2>בחר סוג תבנית:</h2>
+                <div class="container-buttons">
+                    <button id="gastronorm-btn" class="container-btn active" data-type="gastronorm">
+                        <div class="container-icon">🥘</div>
+                        <div class="container-title">גסטרונום</div>
+                    </button>
+                    <button id="sift-btn" class="container-btn" data-type="sift">
+                        <div class="container-icon">🍞</div>
+                        <div class="container-title">סיפט</div>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="division-content" class="division-content">
+                <!-- יוטען דינמית לפי בחירה -->
+            </div>
+        </div>
+
+        <!-- מסך תנור -->
+        <div id="oven-screen" class="screen hidden">
+            <header>
+                <h1>הוראות תנור</h1>
+                <div class="recipe-info">
+                    <h2 id="oven-recipe-name"></h2>
+                </div>
+                <button id="back-from-oven" class="btn btn-secondary">← חזור</button>
+            </header>
+            
+            <div class="oven-type-selection">
+                <h2>בחר סוג תבנית:</h2>
+                <div class="container-buttons">
+                    <button id="oven-gastronorm-btn" class="container-btn active" data-type="gastronorm">
+                        <div class="container-icon">🥘</div>
+                        <div class="container-title">גסטרונום</div>
+                    </button>
+                    <button id="oven-sift-btn" class="container-btn" data-type="sift">
+                        <div class="container-icon">🍞</div>
+                        <div class="container-title">סיפט</div>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="oven-content" class="oven-instructions">
+                <!-- יוטען דינמית לפי בחירה -->
+            </div>
+        </div>
+
+        <!-- מסך הוספת/עריכת מתכון -->
+        <div id="admin-screen" class="screen hidden">
+            <header>
+                <h1 id="admin-title">הוסף מתכון חדש</h1>
+                <button id="back-from-admin" class="btn btn-secondary">← חזור</button>
+            </header>
+            
+            <div class="admin-panel">
+                <form id="add-recipe-form" class="recipe-form">
+                    <!-- חלק 1: רכיבים והוראות הכנה -->
+                    <div class="form-section">
+                        <h2>1. רכיבים והוראות הכנה</h2>
+                        <div class="form-group">
+                            <label>שם המתכון:</label>
+                            <input type="text" id="recipe-name-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>כמות בסיס (ק"ג):</label>
+                            <input type="number" id="base-batch-input" step="0.1" min="1" value="10" required>
+                            <small>הכמויות בטבלה מחושבות לפי כמות זו (למשל 10 ק"ג).</small>
+                        </div>
+                        <div class="form-group">
+                            <label>רכיבי קיט:</label>
+                            <div id="kit-ingredients-inputs">
+                                <div class="ingredient-row">
+                                    <input type="text" placeholder="שם רכיב" class="ingredient-name">
+                                    <input type="number" placeholder="כמות" class="ingredient-amount" step="0.01" min="0">
+                                    <select class="ingredient-unit">
+                                        <option value="גרם">גרם</option>
+                                        <option value="ק"ג">ק"ג</option>
+                                        <option value="מ"ל">מ"ל</option>
+                                        <option value="ליטר">ליטר</option>
+                                        <option value="כפיות">כפיות</option>
+                                        <option value="כפות">כפות</option>
+                                        <option value="כוסות">כוסות</option>
+                                        <option value="יחידות">יחידות</option>
+                                        <option value="חבילות">חבילות</option>
+                                    </select>
+                                    <button type="button" class="remove-ingredient">×</button>
+                                </div>
+                            </div>
+                            <button type="button" id="add-kit-ingredient" class="btn-add">+ הוסף רכיב קיט</button>
+                        </div>
+                        <div class="form-group">
+                            <label>הוראות הכנה:</label>
+                            <textarea id="preparation-instructions" rows="4" placeholder="הוראות הכנת הקיט..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- חלק 2: מים וחוג - גסטרונום -->
+                    <div class="form-section">
+                        <h2>2. מים וחוג - גסטרונום</h2>
+                        <div class="form-group">
+                            <label>כמות חוג (ק"ג):</label>
+                            <input type="number" id="gastronorm-dough-amount" step="0.1" min="0" placeholder="כמות חוג לגסטרונום">
+                        </div>
+                        <div class="form-group">
+                            <label>כמות מים (ליטר):</label>
+                            <input type="number" id="gastronorm-water-amount" step="0.1" min="0" placeholder="כמות מים לגסטרונום">
+                        </div>
+                        <div class="form-group">
+                            <label>סוג מים:</label>
+                            <select id="gastronorm-water-type">
+                                <option value="חם">חם</option>
+                                <option value="קר">קר</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- חלק 3: מים וחוג - סיפט -->
+                    <div class="form-section">
+                        <h2>3. מים וחוג - סיפט</h2>
+                        <div class="form-group">
+                            <label>כמות חוג (ק"ג):</label>
+                            <input type="number" id="sift-dough-amount" step="0.1" min="0" placeholder="כמות חוג לסיפט">
+                        </div>
+                        <div class="form-group">
+                            <label>כמות מים (ליטר):</label>
+                            <input type="number" id="sift-water-amount" step="0.1" min="0" placeholder="כמות מים לסיפט">
+                        </div>
+                        <div class="form-group">
+                            <label>סוג מים:</label>
+                            <select id="sift-water-type">
+                                <option value="חם">חם</option>
+                                <option value="קר">קר</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- חלק 4: תנור - גסטרונום -->
+                    <div class="form-section">
+                        <h2>4. תנור - גסטרונום</h2>
+                        <div class="form-group">
+                            <label>סוג תוכנית:</label>
+                            <input type="text" id="gastronorm-oven-program" placeholder="למשל: משולב, חום יבש, וכו'">
+                        </div>
+                        <div class="form-group">
+                            <label>טמפרטורה (°C):</label>
+                            <input type="number" id="gastronorm-oven-temp" step="1" min="0" placeholder="טמפרטורת אפייה">
+                        </div>
+                        <div class="form-group">
+                            <label>זמן (דקות):</label>
+                            <input type="number" id="gastronorm-oven-time" step="1" min="0" placeholder="זמן אפייה">
+                        </div>
+                        <div class="form-group">
+                            <label>לחות (%):</label>
+                            <input type="number" id="gastronorm-oven-humidity" step="1" min="0" max="100" placeholder="לחות">
+                        </div>
+                        <div class="form-group">
+                            <label>הערות:</label>
+                            <textarea id="gastronorm-oven-notes" rows="3" placeholder="הוראות נוספות..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- חלק 5: תנור - סיפט -->
+                    <div class="form-section">
+                        <h2>5. תנור - סיפט</h2>
+                        <div class="form-group">
+                            <label>סוג תוכנית:</label>
+                            <input type="text" id="sift-oven-program" placeholder="למשל: משולב, חום יבש, וכו'">
+                        </div>
+                        <div class="form-group">
+                            <label>טמפרטורה (°C):</label>
+                            <input type="number" id="sift-oven-temp" step="1" min="0" placeholder="טמפרטורת אפייה">
+                        </div>
+                        <div class="form-group">
+                            <label>זמן (דקות):</label>
+                            <input type="number" id="sift-oven-time" step="1" min="0" placeholder="זמן אפייה">
+                        </div>
+                        <div class="form-group">
+                            <label>לחות (%):</label>
+                            <input type="number" id="sift-oven-humidity" step="1" min="0" max="100" placeholder="לחות">
+                        </div>
+                        <div class="form-group">
+                            <label>הערות:</label>
+                            <textarea id="sift-oven-notes" rows="3" placeholder="הוראות נוספות..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">שמור מתכון</button>
+                        <button type="button" id="cancel-edit-btn" class="btn btn-secondary hidden">ביטול</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- מסך עריכת מתכונים -->
+        <div id="edit-list-screen" class="screen hidden">
+            <header>
+                <h1>עריכת מתכונים</h1>
+                <button id="back-from-edit-list" class="btn btn-secondary">← חזור</button>
+            </header>
+            
+            <div class="recipes-list-section">
+                <div id="admin-recipes-list" class="admin-recipes-list">
+                    <div class="loading">טוען מתכונים...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // הגדרת Google Apps Script
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxvj4K2biGQe899qT-cj238mfMYIY_uzdhqZ92oQyGEUw2CKnqApPA9_KkHXGwzJZHg/exec';
+
+        // פונקציה לטעינת מתכונים
+        async function loadRecipes() {
+            try {
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=get`);
+                const data = await response.json();
+                return data.recipes || [];
+            } catch (error) {
+                console.error('שגיאה בטעינת מתכונים:', error);
+                return [];
+            }
+        }
+
+        // פונקציה לשמירת מתכונים
+        async function saveRecipes(recipes) {
+            try {
+                console.log('שולח מתכונים לשמירה:', recipes);
+                console.log('מספר מתכונים:', recipes.length);
+                console.log('URL:', APPS_SCRIPT_URL);
+                
+                const payload = {
+                    action: 'save',
+                    recipes: recipes
+                };
+                
+                console.log('Payload:', JSON.stringify(payload, null, 2));
+                console.log('גודל ה-payload:', JSON.stringify(payload).length, 'תווים');
+                
+                // ננסה קודם עם cors רגיל כדי לראות את התשובה
+                try {
+                    console.log('מנסה לשלוח עם CORS...');
+                    const response = await fetch(APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'cors',
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    console.log('תגובה התקבלה:', response.status, response.statusText);
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log('תוצאה מ-Apps Script:', result);
+                        if (result.success) {
+                            console.log('✅ שמירה הצליחה!');
+                            return true;
+                        } else {
+                            console.error('❌ שמירה נכשלה:', result.error);
+                            throw new Error(result.error || 'שמירה נכשלה');
+                        }
+                    } else {
+                        console.error('❌ שגיאת HTTP:', response.status);
+                        const text = await response.text();
+                        console.error('תוכן התגובה:', text);
+                        throw new Error(`שגיאת HTTP: ${response.status}`);
+                    }
+                } catch (corsError) {
+                    console.warn('CORS נכשל, מנסה עם no-cors:', corsError);
+                    
+                    // אם CORS נכשל, ננסה עם no-cors (אבל לא נוכל לראות את התשובה)
+                    await fetch(APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    // נחכה קצת כדי לוודא שהשמירה הסתיימה
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    
+                    console.log('⚠️ נשלח עם no-cors - לא ניתן לוודא שהשמירה הצליחה');
+                    console.log('בדוק את הלוגים ב-Apps Script כדי לוודא שהנתונים התקבלו');
+                    return true;
+                }
+                
+            } catch (error) {
+                console.error('❌ שגיאה בשמירת מתכונים:', error);
+                console.error('פרטי השגיאה:', error.message, error.stack);
+                throw new Error('לא הצלחנו לשמור את המתכונים: ' + error.message);
+            }
+        }
+
+        // יצירת ID ייחודי
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // ניהול מסכים ומעבר מהיר בין שלבים
+        let currentRecipe = null;
+        let currentScreen = 'main';
+
+        // פונקציה להחלפת מסכים
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.add('hidden');
+                screen.classList.remove('active');
+            });
+            
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.remove('hidden');
+                targetScreen.classList.add('active');
+                currentScreen = screenId;
+            }
+        }
+
+        // טעינת מתכונים והצגתם
+        async function loadAndDisplayRecipes() {
+            const recipesList = document.getElementById('recipes-list');
+            recipesList.innerHTML = '<div class="loading">טוען מתכונים...</div>';
+            
+            const recipes = await loadRecipes();
+            
+            if (recipes.length === 0) {
+                recipesList.innerHTML = '<div class="loading">אין מתכונים. לחץ על "הוסף מתכון" להתחיל</div>';
+                return;
+            }
+            
+            recipesList.innerHTML = recipes.map(recipe => 
+                `<div class="recipe-card" data-recipe-id="${recipe.id}">${recipe.name}</div>`
+            ).join('');
+            
+            // הוספת מאזינים
+            document.querySelectorAll('.recipe-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const recipeId = card.dataset.recipeId;
+                    const recipe = recipes.find(r => r.id === recipeId);
+                    if (recipe) {
+                        currentRecipe = recipe;
+                        showActionSelection(recipe);
+                    }
+                });
+            });
+        }
+
+        // הצגת מסך בחירת פעולה
+        function showActionSelection(recipe) {
+            document.getElementById('selected-recipe-name').textContent = recipe.name;
+            showScreen('action-selection-screen');
+        }
+
+        // טעינה ראשונית
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadAndDisplayRecipes();
+            setupEventListeners();
+        });
+
+        // הגדרת מאזינים
+        function setupEventListeners() {
+            // כפתורי מסך ראשי
+            document.getElementById('add-recipe-btn')?.addEventListener('click', () => {
+                showScreen('admin-screen');
+                document.getElementById('admin-title').textContent = 'הוסף מתכון חדש';
+                document.getElementById('cancel-edit-btn').classList.add('hidden');
+                document.getElementById('add-recipe-form').reset();
+            });
+            
+            document.getElementById('edit-recipes-btn')?.addEventListener('click', () => {
+                showScreen('edit-list-screen');
+                loadEditList();
+            });
+            
+            document.getElementById('refresh-btn')?.addEventListener('click', async () => {
+                await loadAndDisplayRecipes();
+            });
+            
+            // כפתורי חזרה
+            document.getElementById('back-to-main')?.addEventListener('click', () => {
+                showScreen('main-screen');
+                currentRecipe = null;
+            });
+            
+            document.getElementById('back-from-admin')?.addEventListener('click', () => {
+                showScreen('main-screen');
+            });
+            
+            document.getElementById('back-from-edit-list')?.addEventListener('click', () => {
+                showScreen('main-screen');
+            });
+            
+            // כפתורי פעולות
+            document.getElementById('kit-action-btn')?.addEventListener('click', () => {
+                if (currentRecipe) showKitScreen(currentRecipe);
+            });
+            
+            document.getElementById('division-action-btn')?.addEventListener('click', () => {
+                if (currentRecipe) showDivisionScreen(currentRecipe);
+            });
+            
+            document.getElementById('oven-action-btn')?.addEventListener('click', () => {
+                if (currentRecipe) showOvenScreen(currentRecipe);
+            });
+            
+            // כפתורי חזרה משלבים
+            document.getElementById('back-from-kit')?.addEventListener('click', () => {
+                if (currentRecipe) showActionSelection(currentRecipe);
+            });
+            
+            document.getElementById('back-from-division')?.addEventListener('click', () => {
+                if (currentRecipe) showActionSelection(currentRecipe);
+            });
+            
+            document.getElementById('back-from-oven')?.addEventListener('click', () => {
+                if (currentRecipe) showActionSelection(currentRecipe);
+            });
+            
+            // בחירת סוג תבנית - חלוקה
+            document.getElementById('gastronorm-btn')?.addEventListener('click', () => {
+                if (currentRecipe) {
+                    updateContainerButtons('gastronorm');
+                    displayDivisionContent(currentRecipe, 'gastronorm');
+                }
+            });
+            
+            document.getElementById('sift-btn')?.addEventListener('click', () => {
+                if (currentRecipe) {
+                    updateContainerButtons('sift');
+                    displayDivisionContent(currentRecipe, 'sift');
+                }
+            });
+            
+            // בחירת סוג תבנית - תנור
+            document.getElementById('oven-gastronorm-btn')?.addEventListener('click', () => {
+                if (currentRecipe) {
+                    updateOvenContainerButtons('gastronorm');
+                    displayOvenContent(currentRecipe, 'gastronorm');
+                }
+            });
+            
+            document.getElementById('oven-sift-btn')?.addEventListener('click', () => {
+                if (currentRecipe) {
+                    updateOvenContainerButtons('sift');
+                    displayOvenContent(currentRecipe, 'sift');
+                }
+            });
+            
+            // טופס הוספת מתכון
+            const form = document.getElementById('add-recipe-form');
+            if (form) {
+                console.log('✅ טופס נמצא ומחובר');
+                form.addEventListener('submit', handleFormSubmit);
+            } else {
+                console.error('❌ טופס לא נמצא!');
+            }
+            
+            // כפתור ביטול עריכה
+            document.getElementById('cancel-edit-btn')?.addEventListener('click', () => {
+                showScreen('main-screen');
+                currentRecipe = null;
+                form.reset();
+                document.getElementById('cancel-edit-btn').classList.add('hidden');
+                document.getElementById('admin-title').textContent = 'הוסף מתכון חדש';
+            });
+            
+            // הוספת רכיב קיט
+            document.getElementById('add-kit-ingredient')?.addEventListener('click', addKitIngredientRow);
+            
+            // מחיקת רכיב
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-ingredient')) {
+                    e.target.parentElement.remove();
+                }
+            });
+        }
+
+        // עדכון כפתורי בחירת תבנית
+        function updateContainerButtons(selectedType) {
+            document.querySelectorAll('.container-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-type="${selectedType}"]`)?.classList.add('active');
+        }
+
+        function updateOvenContainerButtons(selectedType) {
+            document.querySelectorAll('#oven-screen .container-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`#oven-screen [data-type="${selectedType}"]`)?.classList.add('active');
+        }
+
+        // הצגת מסך קיטים
+        function showKitScreen(recipe) {
+            document.getElementById('kit-recipe-name').textContent = recipe.name;
+            showScreen('kit-screen');
+            displayKitContent(recipe);
+        }
+
+        // הצגת תוכן קיט
+        function displayKitContent(recipe) {
+            const baseBatch = recipe.baseBatchKg || 10;
+            document.getElementById('base-batch-info').textContent = `כמות בסיס: ${baseBatch} ק"ג`;
+            
+            // הוספת מאזינים לכפתורי כמות
+            document.querySelectorAll('.quantity-btn').forEach(btn => {
+                btn.onclick = () => {
+                    const quantity = parseInt(btn.dataset.quantity);
+                    const multiplier = quantity / baseBatch;
+                    document.getElementById('multiplier-info').textContent = `מכפיל: x${multiplier.toFixed(1)}`;
+                    document.getElementById('selected-quantity-badge').textContent = `${quantity} ק"ג`;
+                    document.getElementById('selected-quantity-badge').style.display = 'inline-block';
+                    
+                    // הצגת רכיבים עם חישוב
+                    const ingredientsList = document.getElementById('kit-ingredients');
+                    ingredientsList.innerHTML = recipe.kitIngredients.map(ing => {
+                        const calculatedAmount = (ing.amount * multiplier).toFixed(2);
+                        return `
+                            <div class="ingredient-item">
+                                <span class="ingredient-name">${ing.name}</span>
+                                <span class="ingredient-amount">${calculatedAmount} ${ing.unit}</span>
+                            </div>
+                        `;
+                    }).join('');
+                };
+            });
+        }
+
+        // הצגת מסך חלוקה
+        function showDivisionScreen(recipe) {
+            document.getElementById('division-recipe-name').textContent = recipe.name;
+            showScreen('division-screen');
+            updateContainerButtons('gastronorm');
+            displayDivisionContent(recipe, 'gastronorm');
+        }
+
+        // הצגת תוכן חלוקה
+        function displayDivisionContent(recipe, type) {
+            const content = document.getElementById('division-content');
+            const data = type === 'gastronorm' ? recipe.gastronorm : recipe.sift;
+            
+            if (!data) {
+                content.innerHTML = '<div class="loading">אין נתונים זמינים</div>';
+                return;
+            }
+            
+            content.innerHTML = `
+                <div class="division-info">
+                    <div class="info-item">
+                        <span class="info-label">כמות חוג:</span>
+                        <span class="info-value">${data.doughAmount || 0} ק"ג</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">כמות מים:</span>
+                        <span class="info-value">${data.waterAmount || 0} ליטר</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">סוג מים:</span>
+                        <span class="info-value">${data.waterType || 'לא מוגדר'}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // הצגת מסך תנור
+        function showOvenScreen(recipe) {
+            document.getElementById('oven-recipe-name').textContent = recipe.name;
+            showScreen('oven-screen');
+            updateOvenContainerButtons('gastronorm');
+            displayOvenContent(recipe, 'gastronorm');
+        }
+
+        // הצגת תוכן תנור
+        function displayOvenContent(recipe, type) {
+            const content = document.getElementById('oven-content');
+            const data = type === 'gastronorm' ? recipe.gastronormOven : recipe.siftOven;
+            
+            if (!data) {
+                content.innerHTML = '<div class="loading">אין נתונים זמינים</div>';
+                return;
+            }
+            
+            content.innerHTML = `
+                <div class="oven-info">
+                    <div class="setting-item">
+                        <div class="setting-label">סוג תוכנית</div>
+                        <div class="setting-value">${data.program || 'לא מוגדר'}</div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">טמפרטורה</div>
+                        <div class="setting-value">${data.temp || 0}°C</div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">זמן</div>
+                        <div class="setting-value">${data.time || 0} דקות</div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">לחות</div>
+                        <div class="setting-value">${data.humidity || 0}%</div>
+                    </div>
+                    ${data.notes ? `
+                    <div class="setting-item">
+                        <div class="setting-label">הערות</div>
+                        <div class="setting-value">${data.notes}</div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // טיפול בשליחת טופס
+        async function handleFormSubmit(e) {
+            console.log('=== handleFormSubmit נקרא ===');
+            e.preventDefault();
+            
+            // קריאת כל הערכים מהטופס
+            const getValue = (id) => {
+                const el = document.getElementById(id);
+                if (!el) {
+                    console.warn('⚠️ אלמנט לא נמצא:', id);
+                    return '';
+                }
+                return el.value || '';
+            };
+            
+            const getNumber = (id, defaultValue = 0) => {
+                const el = document.getElementById(id);
+                if (!el || !el.value) return defaultValue;
+                const val = parseFloat(el.value);
+                return isNaN(val) ? defaultValue : val;
+            };
+            
+            const getInt = (id, defaultValue = 0) => {
+                const el = document.getElementById(id);
+                if (!el || !el.value) return defaultValue;
+                const val = parseInt(el.value);
+                return isNaN(val) ? defaultValue : val;
+            };
+            
+            console.log('קורא נתונים מהטופס...');
+            const name = getValue('recipe-name-input');
+            const baseBatchKg = getNumber('base-batch-input', 10);
+            const preparationInstructions = getValue('preparation-instructions');
+            
+            console.log('שם:', name);
+            console.log('כמות בסיס:', baseBatchKg);
+            console.log('הוראות הכנה:', preparationInstructions);
+            
+            const recipe = {
+                id: document.getElementById('cancel-edit-btn').classList.contains('hidden') 
+                    ? generateId() 
+                    : currentRecipe?.id || generateId(),
+                name: name,
+                baseBatchKg: baseBatchKg,
+                kitIngredients: getKitIngredients(),
+                preparationInstructions: preparationInstructions,
+                gastronorm: {
+                    doughAmount: getNumber('gastronorm-dough-amount', 0),
+                    waterAmount: getNumber('gastronorm-water-amount', 0),
+                    waterType: getValue('gastronorm-water-type') || 'חם'
+                },
+                sift: {
+                    doughAmount: getNumber('sift-dough-amount', 0),
+                    waterAmount: getNumber('sift-water-amount', 0),
+                    waterType: getValue('sift-water-type') || 'חם'
+                },
+                gastronormOven: {
+                    program: getValue('gastronorm-oven-program'),
+                    temp: getInt('gastronorm-oven-temp', 0),
+                    time: getInt('gastronorm-oven-time', 0),
+                    humidity: getInt('gastronorm-oven-humidity', 0),
+                    notes: getValue('gastronorm-oven-notes')
+                },
+                siftOven: {
+                    program: getValue('sift-oven-program'),
+                    temp: getInt('sift-oven-temp', 0),
+                    time: getInt('sift-oven-time', 0),
+                    humidity: getInt('sift-oven-humidity', 0),
+                    notes: getValue('sift-oven-notes')
+                }
+            };
+            
+            // בדיקה - הדפסה לקונסול
+            console.log('=== מתכון לפני שמירה ===');
+            console.log('שומר מתכון:', recipe);
+            console.log('גסטרונום:', recipe.gastronorm);
+            console.log('סיפט:', recipe.sift);
+            console.log('תנור גסטרונום:', recipe.gastronormOven);
+            console.log('תנור סיפט:', recipe.siftOven);
+            console.log('========================');
+            
+            try {
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'שומר...';
+                submitBtn.disabled = true;
+                
+                const recipes = await loadRecipes();
+                const existingIndex = recipes.findIndex(r => r.id === recipe.id);
+                
+                if (existingIndex >= 0) {
+                    recipes[existingIndex] = recipe;
+                } else {
+                    recipes.push(recipe);
+                }
+                
+                console.log('שולח ל-Apps Script:', recipes);
+                await saveRecipes(recipes);
+                alert('מתכון נשמר בהצלחה!');
+                e.target.reset();
+                showScreen('main-screen');
+                await loadAndDisplayRecipes();
+                
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            } catch (error) {
+                console.error('שגיאה:', error);
+                alert('שגיאה בשמירת המתכון. נסה שוב.\n\nפתח את הקונסול (F12) לפרטים נוספים.');
+                e.target.querySelector('button[type="submit"]').disabled = false;
+            }
+        }
+
+        // קבלת רכיבי קיט מהטופס
+        function getKitIngredients() {
+            const rows = document.querySelectorAll('.ingredient-row');
+            return Array.from(rows).map(row => {
+                const name = row.querySelector('.ingredient-name').value;
+                const amount = parseFloat(row.querySelector('.ingredient-amount').value);
+                const unit = row.querySelector('.ingredient-unit').value;
+                
+                if (!name || !amount) return null;
+                
+                return { name, amount, unit };
+            }).filter(ing => ing !== null);
+        }
+
+        // הוספת שורת רכיב קיט
+        function addKitIngredientRow() {
+            const container = document.getElementById('kit-ingredients-inputs');
+            const newRow = document.createElement('div');
+            newRow.className = 'ingredient-row';
+            newRow.innerHTML = `
+                <input type="text" placeholder="שם רכיב" class="ingredient-name">
+                <input type="number" placeholder="כמות" class="ingredient-amount" step="0.01" min="0">
+                <select class="ingredient-unit">
+                    <option value="גרם">גרם</option>
+                    <option value="ק"ג">ק"ג</option>
+                    <option value="מ"ל">מ"ל</option>
+                    <option value="ליטר">ליטר</option>
+                    <option value="כפיות">כפיות</option>
+                    <option value="כפות">כפות</option>
+                    <option value="כוסות">כוסות</option>
+                    <option value="יחידות">יחידות</option>
+                    <option value="חבילות">חבילות</option>
+                </select>
+                <button type="button" class="remove-ingredient">×</button>
+            `;
+            container.appendChild(newRow);
+        }
+
+        // טעינת רשימת עריכה
+        async function loadEditList() {
+            const list = document.getElementById('admin-recipes-list');
+            list.innerHTML = '<div class="loading">טוען מתכונים...</div>';
+            
+            const recipes = await loadRecipes();
+            
+            if (recipes.length === 0) {
+                list.innerHTML = '<div class="loading">אין מתכונים</div>';
+                return;
+            }
+            
+            list.innerHTML = recipes.map(recipe => `
+                <div class="admin-recipe-item">
+                    <h3>${recipe.name}</h3>
+                    <p>כמות בסיס: ${recipe.baseBatchKg || 10} ק"ג</p>
+                    <p>רכיבי קיט: ${recipe.kitIngredients?.length || 0}</p>
+                    <div class="admin-recipe-actions">
+                        <button class="btn-edit" onclick="editRecipe('${recipe.id}')">ערוך</button>
+                        <button class="btn-delete" onclick="deleteRecipe('${recipe.id}')">מחק</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // עריכת מתכון
+        window.editRecipe = async function(recipeId) {
+            const recipes = await loadRecipes();
+            const recipe = recipes.find(r => r.id === recipeId);
+            
+            if (!recipe) return;
+            
+            currentRecipe = recipe;
+            
+            // טעינת נתונים לטופס
+            document.getElementById('recipe-name-input').value = recipe.name;
+            document.getElementById('base-batch-input').value = recipe.baseBatchKg || 10;
+            document.getElementById('preparation-instructions').value = recipe.preparationInstructions || '';
+            
+            // רכיבי קיט
+            const container = document.getElementById('kit-ingredients-inputs');
+            container.innerHTML = '';
+            if (recipe.kitIngredients && recipe.kitIngredients.length > 0) {
+                recipe.kitIngredients.forEach(ing => {
+                    const row = document.createElement('div');
+                    row.className = 'ingredient-row';
+                    row.innerHTML = `
+                        <input type="text" placeholder="שם רכיב" class="ingredient-name" value="${ing.name}">
+                        <input type="number" placeholder="כמות" class="ingredient-amount" step="0.01" min="0" value="${ing.amount}">
+                        <select class="ingredient-unit">
+                            <option value="גרם" ${ing.unit === 'גרם' ? 'selected' : ''}>גרם</option>
+                            <option value="ק"ג" ${ing.unit === 'ק"ג' ? 'selected' : ''}>ק"ג</option>
+                            <option value="מ"ל" ${ing.unit === 'מ"ל' ? 'selected' : ''}>מ"ל</option>
+                            <option value="ליטר" ${ing.unit === 'ליטר' ? 'selected' : ''}>ליטר</option>
+                            <option value="כפיות" ${ing.unit === 'כפיות' ? 'selected' : ''}>כפיות</option>
+                            <option value="כפות" ${ing.unit === 'כפות' ? 'selected' : ''}>כפות</option>
+                            <option value="כוסות" ${ing.unit === 'כוסות' ? 'selected' : ''}>כוסות</option>
+                            <option value="יחידות" ${ing.unit === 'יחידות' ? 'selected' : ''}>יחידות</option>
+                            <option value="חבילות" ${ing.unit === 'חבילות' ? 'selected' : ''}>חבילות</option>
+                        </select>
+                        <button type="button" class="remove-ingredient">×</button>
+                    `;
+                    container.appendChild(row);
+                });
+            } else {
+                addKitIngredientRow();
+            }
+            
+            // גסטרונום
+            if (recipe.gastronorm) {
+                document.getElementById('gastronorm-dough-amount').value = recipe.gastronorm.doughAmount || '';
+                document.getElementById('gastronorm-water-amount').value = recipe.gastronorm.waterAmount || '';
+                document.getElementById('gastronorm-water-type').value = recipe.gastronorm.waterType || 'חם';
+            }
+            
+            // סיפט
+            if (recipe.sift) {
+                document.getElementById('sift-dough-amount').value = recipe.sift.doughAmount || '';
+                document.getElementById('sift-water-amount').value = recipe.sift.waterAmount || '';
+                document.getElementById('sift-water-type').value = recipe.sift.waterType || 'חם';
+            }
+            
+            // תנור גסטרונום
+            if (recipe.gastronormOven) {
+                document.getElementById('gastronorm-oven-program').value = recipe.gastronormOven.program || '';
+                document.getElementById('gastronorm-oven-temp').value = recipe.gastronormOven.temp || '';
+                document.getElementById('gastronorm-oven-time').value = recipe.gastronormOven.time || '';
+                document.getElementById('gastronorm-oven-humidity').value = recipe.gastronormOven.humidity || '';
+                document.getElementById('gastronorm-oven-notes').value = recipe.gastronormOven.notes || '';
+            }
+            
+            // תנור סיפט
+            if (recipe.siftOven) {
+                document.getElementById('sift-oven-program').value = recipe.siftOven.program || '';
+                document.getElementById('sift-oven-temp').value = recipe.siftOven.temp || '';
+                document.getElementById('sift-oven-time').value = recipe.siftOven.time || '';
+                document.getElementById('sift-oven-humidity').value = recipe.siftOven.humidity || '';
+                document.getElementById('sift-oven-notes').value = recipe.siftOven.notes || '';
+            }
+            
+            document.getElementById('admin-title').textContent = 'ערוך מתכון';
+            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+            showScreen('admin-screen');
+        };
+
+        // מחיקת מתכון
+        window.deleteRecipe = async function(recipeId) {
+            if (!confirm('האם אתה בטוח שברצונך למחוק מתכון זה?')) {
+                return;
+            }
+            
+            try {
+                const recipes = await loadRecipes();
+                const filtered = recipes.filter(r => r.id !== recipeId);
+                await saveRecipes(filtered);
+                await loadEditList();
+            } catch (error) {
+                console.error('שגיאה:', error);
+                alert('שגיאה במחיקת המתכון. נסה שוב.');
+            }
+        };
+    </script>
+</body>
+</html>
